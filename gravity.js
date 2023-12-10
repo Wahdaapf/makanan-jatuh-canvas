@@ -70,6 +70,31 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+let touchStartX = null;
+
+canvas.addEventListener('touchstart', (event) => {
+  touchStartX = event.touches[0].clientX;
+});
+
+canvas.addEventListener('touchmove', (event) => {
+  if (touchStartX !== null) {
+    const touchX = event.touches[0].clientX;
+    const diffX = touchX - touchStartX;
+
+    if (diffX > 0) {
+      moveCatcherRight(); // Geser ke kanan jika pergerakan ke kanan terdeteksi
+    } else if (diffX < 0) {
+      moveCatcherLeft(); // Geser ke kiri jika pergerakan ke kiri terdeteksi
+    }
+
+    touchStartX = touchX;
+  }
+});
+
+canvas.addEventListener('touchend', () => {
+  touchStartX = null;
+});
+
 function drawBall(ball) {
   ctx.beginPath();
   ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
