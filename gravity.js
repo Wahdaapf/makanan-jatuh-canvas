@@ -11,7 +11,7 @@ const catcher = {
   x: canvas.width / 2 - 50,
   y: canvas.height - 20,
   width: 100,
-  height: 10,
+  height: 30,
   color: "green",
   lives: 3, // Tambah properti untuk nyawa
   healthyFoodCount: 0 // Tambah properti untuk menghitung makanan sehat yang diambil
@@ -40,13 +40,11 @@ function generateBalls() {
   
   setInterval(generateBalls, 1000);
 
-function drawCatcher() {
-  ctx.beginPath();
-  ctx.rect(catcher.x, catcher.y, catcher.width, catcher.height);
-  ctx.fillStyle = catcher.color;
-  ctx.fill();
-  ctx.closePath();
-}
+  function drawCatcher() {
+    const catcherImage = document.getElementById('catcherImage');
+    ctx.drawImage(catcherImage, catcher.x, catcher.y, catcher.width, catcher.height);
+  }
+  
 
 function moveCatcherLeft() {
   catcher.x -= 10; // Mengurangi posisi x objek penangkap
@@ -96,11 +94,8 @@ canvas.addEventListener('touchend', () => {
 });
 
 function drawBall(ball) {
-  ctx.beginPath();
-  ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-  ctx.fillStyle = ball.color;
-  ctx.fill();
-  ctx.closePath();
+  const ballImage = document.getElementById('ballImages1');
+  ctx.drawImage(ballImage, ball.x - ball.radius, ball.y - ball.radius, ball.radius * 2, ball.radius * 2);
 }
 
 function applyGravity(ball) {
@@ -156,6 +151,15 @@ function updateCountDisplay() {
     document.getElementById('healthyCount').innerText = catcher.healthyFoodCount;
     document.getElementById('livesCount').innerText = catcher.lives;
   }
+
+  function restartGame() {
+    catcher.lives = 3;
+    catcher.healthyFoodCount = 0;
+    balls.length = 0; // Mengosongkan array bola
+    generateBalls(); // Membuat bola baru setelah mereset permainan
+  }
+
+  document.getElementById('restartButton').addEventListener('click', restartGame);
 
   function draw() {
     clearCanvas();
