@@ -20,8 +20,14 @@ const catcher = {
 const numOfBalls = 1; // Jumlah bola yang ingin dibuat
 
 function generateBalls() {
+    let sehat = ['s1', 's2', 's3'];
+    let tidak = ['g1', 'g2', 'g3'];
+    let rands = Math.floor(Math.random() * sehat.length);
+    let randt = Math.floor(Math.random() * tidak.length);
     for (let i = 0; i < numOfBalls; i++) {
       const isHealthy = Math.random() < 0.5;
+      const ballImage = new Image();
+      ballImage.src = isHealthy ? `game-3/${sehat[rands]}.png` : `game-3/${tidak[randt]}.png`;
       let color = isHealthy ? "yellow" : "red";
       const radius = 10 + Math.random() * 20;
       balls.push({
@@ -29,6 +35,7 @@ function generateBalls() {
         y: -radius, // Mengatur posisi y di atas layar
         radius: radius,
         color: color,
+        image: ballImage,
         velocityY: 1 + Math.random() * 3,
         gravity: 0.0001 + Math.random() * 0.2,
         isCaught: false,
@@ -94,8 +101,7 @@ canvas.addEventListener('touchend', () => {
 });
 
 function drawBall(ball) {
-  const ballImage = document.getElementById('ballImages1');
-  ctx.drawImage(ballImage, ball.x - ball.radius, ball.y - ball.radius, ball.radius * 2, ball.radius * 2);
+  ctx.drawImage(ball.image, ball.x - ball.radius, ball.y - ball.radius, ball.radius * 2, ball.radius * 2);
 }
 
 function applyGravity(ball) {
@@ -131,6 +137,11 @@ function checkCollision(ball) {
     ) {
       if (ball.isHealthy) {
         catcher.healthyFoodCount++; // Tambah skor makanan sehat jika bola yang bisa dimakan diambil
+        if (catcher.healthyFoodCount == 10) {
+          alert('Game Finish'); // Tambahkan logika jika nyawa habis
+          // Lakukan sesuatu, misalnya restart permainan
+          // Di sini kamu bisa tambahkan logika untuk mengulang permainan
+        }
       } else {
         catcher.lives--; // Kurangi nyawa jika bola yang tidak bisa dimakan diambil
         if (catcher.lives <= 0) {
